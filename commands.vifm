@@ -1,0 +1,67 @@
+"   ____                                          _     
+"  / ___|___  _ __ ___  _ __ ___   __ _ _ __   __| |___ 
+" | |   / _ \| '_ ` _ \| '_ ` _ \ / _` | '_ \ / _` / __|
+" | |__| (_) | | | | | | | | | | | (_| | | | | (_| \__ \
+"  \____\___/|_| |_| |_|_| |_| |_|\__,_|_| |_|\__,_|___/
+"                                                       
+
+" :com[mand][!] command_name action
+" Los siguientes macros pueden ser usados en un comando
+" %a Se reemplaza con los argumentos del usuario.
+" %c El archivo actual debajo del cursor.
+" %C El archivo actual debajo del cursor en el otro directorio.
+" %f El archivo o archivos seleccionados actualmente.
+" %F El archivo seleccionado actual, o archivos en el otro directorio.
+" %b igual que %f %F.
+" %d El nombre del directorio actual.
+" %D El nombre del directorio de la otra ventana.
+" %m Ejecuta el comando en una ventana de menú.
+
+"NCurses Disk Usage
+"command! ncdu ncdu
+"Analizador de uso de disco rápido con interfaz de consola escrita en Go
+"command! gdu gdu
+command! df df -h %m 2> /dev/null
+command! du du -h --max-depth=1 . %m 2> /dev/null
+command! diff nvim -d %f %F
+command! run !! ./%f
+command! make !!make %a
+command! mkcd :mkdir %a | cd %a
+command! vgrep nvim "+grep %a"
+command! reload :write | restart
+
+" Comprimir archivos
+command! tar tar -cvf %f.tar %f
+command! gzip gzip -9 %f.gz
+command! bzip2 bzip2 %f.bz2
+
+command! targz tar -czvf %f.tar.gz %f
+command! tarxz  tar -Jcvf %f.tar.xz %f
+
+command! zip zip -r %f.zip %f
+command! rar rar a %f.rar %f
+"command! 7z 7z a %f.7z %f
+
+" Descomprimir archivos
+command! untar tar -xvf %f
+command! ungzip gzip -d %f
+command! unbzip2 bzip2 -d %f
+
+command! untargz tar -xzvf %f
+command! untarxz tar -Jxvf %f
+
+command! unzip unzip %f
+command! unrar rar x %f
+"command! un7z 7z e %f
+
+" My Engrampa
+command! engrampaM ~/.config/vifm/engrampa.sh %f %m
+command! mostrar echo "hola\ndos" %m
+command! FZFfind : set noquickview
+                \| let $FZF_PICK = term('find ./* | fzf 2>/dev/tty')
+                \| if $FZF_PICK != ''
+                \|     execute 'goto' fnameescape($FZF_PICK)
+                \| endif
+
+command! nvimDev nvim -c "set rtp+=." %f
+command! PreviewHighlight !highlight -O xterm256 --syntax `basename %c | sed 's/.*\.//'` %c

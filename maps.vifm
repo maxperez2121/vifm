@@ -1,0 +1,77 @@
+"                                  _  __           
+"  _ __ ___   __ _ _ __  _____   _(_)/ _|_ __ ___  
+" | '_ ` _ \ / _` | '_ \/ __\ \ / / | |_| '_ ` _ \ 
+" | | | | | | (_| | |_) \__ \\ V /| |  _| | | | | |
+" |_| |_| |_|\__,_| .__/|___(_)_/ |_|_| |_| |_| |_|
+"                 |_|                              
+
+" Iniciar shell en el directorio actual
+nnoremap s :shell<cr>
+
+" Mostrar cuadro de diálogo de clasificación
+nnoremap S :sort<cr>
+
+" Alternar la visibilidad de la ventana de vista previa
+nnoremap w :view<cr>
+vnoremap w :view<cr>gv
+
+nnoremap / :FZFfind<cr>
+
+" Abrir archivo en una instancia existente de nvim
+nnoremap o :!nvim --server $vimSH --remote %f<cr>
+
+" Abrir archivo en nueva instancia de nvim
+nnoremap O :!nvim --listen ~/.cache/nvim/server.pipe --server ~/.cache/nvim/server.pipe --remote $f<cr>
+"nnoremap O :!nvim %f<cr>
+
+" Abrir archivo en segundo plano usando su programa predeterminado
+nnoremap gb :file &<cr>l
+
+" Interacción con el portapapeles del sistema
+if has('win')
+    " Yank current directory path to Windows clipboard with forward slashes
+    nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
+    " Yank path to current file to Windows clipboard with forward slashes
+    nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
+elseif executable('xclip')
+    "" Yank current directory path into the clipboard
+    "nnoremap yd :!echo %d | xclip %i<cr>
+    "" Yank current file path into the clipboard
+    "nnoremap yf :!echo %c:p | xclip %i<cr>
+    " yank current directory path into the clipboard
+    nnoremap yd :!echo -n %d | xclip -selection clipboard %i<cr>:echo expand('%"d') "is yanked to clipboard"<cr>
+    
+    " yank current file path into the clipboard
+    nnoremap yf :!echo -n %c:p | xclip -selection clipboard %i<cr>:echo expand('%"c:p') "is yanked to clipboard"<cr>
+    
+    " yank current filename without path into the clipboard
+    nnoremap yn :!echo -n %c | xclip -selection clipboard %i<cr>:echo expand('%"c') "is yanked to clipboard"<cr>
+elseif executable('xsel')
+    " Yank current directory path into primary and selection clipboards
+    nnoremap yd :!echo -n %d | xsel --input --primary %i &&
+                \ echo -n %d | xsel --clipboard --input %i<cr>
+    " Yank current file path into into primary and selection clipboards
+    nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
+                \ echo -n %c:p | xsel --clipboard --input %i<cr>
+endif
+
+" Abrir la consola en el directorio actual
+nnoremap ,tk :!kitty &<cr>
+
+" Abra el editor para editar vifmrc y aplicar la configuración después de volver a vifm
+nnoremap ,c :write | edit $MYVIFMRC | restart<cr>
+
+" Toggle wrap setting on ,w key
+nnoremap ,w :set wrap!<cr>
+
+" Ejemplo de asignaciones estándar de administradores de archivos de dos paneles
+"nnoremap <f3> :!less %f<cr>
+nnoremap <f3> :!batcat %f<cr>
+nnoremap <f4> :edit<cr>
+nnoremap <f5> :copy<cr>
+nnoremap <f6> :move<cr>
+nnoremap <f7> :mkdir<space>
+nnoremap <f8> :delete<cr>
+
+nnoremap ,q :q<cr>
+nnoremap ,sc :sync<cr>
